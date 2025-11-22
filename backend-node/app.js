@@ -27,6 +27,11 @@ app.use("/messages", messageRoutes);
 app.use("/faqs", faqRoutes);
 app.use("/escalate", escalationRoutes);
 
+const authRoutes = require("./src/routes/auth");
+app.use("/auth", authRoutes);
+
+
+
 // Health Route
 app.get("/", (req, res) => {
   res.json({ status: "Node backend running" });

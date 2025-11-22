@@ -4,5 +4,7 @@ const MessageController = require("../controllers/MessageController");
 
 router.post("/:sessionId", MessageController.processMessage);
 router.get("/:sessionId", MessageController.getMessages);
+router.get("/:sessionId/:messageId", MessageController.getMessageDetails);
+
 
 module.exports = router;

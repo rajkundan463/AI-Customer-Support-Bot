@@ -5,10 +5,10 @@ module.exports = {
     try {
       const { customerId } = req.body;
 
-      // Mongoose create
+      
       const session = await Session.create({ customerId });
 
-      return res.json({ sessionId: session._id });  // USE _id for MongoDB
+      return res.json({ sessionId: session._id });  
 
     } catch (err) {
       console.error("Create session error:", err);
@@ -18,7 +18,7 @@ module.exports = {
 
   getSession: async (req, res) => {
     try {
-      // Mongoose: find by id
+      
       const session = await Session.findById(req.params.sessionId);
 
       if (!session) {

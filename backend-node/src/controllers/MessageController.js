@@ -57,3 +57,20 @@ module.exports = {
     }
   }
 };
+
+
+module.exports.getMessageDetails = async (req, res) => {
+  try {
+    const { sessionId, messageId } = req.params;
+
+    const msg = await Message.findOne({ _id: messageId, sessionId });
+
+    if (!msg) return res.status(404).json({ error: "Not found" });
+
+    return res.json(msg);
+  } catch (err) {
+    console.error("Message inspector error:", err);
+    res.status(500).json({ error: "Failed to load message" });
+  }
+};
+
