@@ -7,7 +7,7 @@ const api = axios.create({
   baseURL: NODE_BASE,
 });
 
-// Automatically attach token for protected admin routes
+// Attach JWT token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -15,18 +15,21 @@ api.interceptors.request.use((config) => {
 });
 
 export default {
-  // 🔐 AUTH
+
   login: (username, password) =>
     api.post(`/auth/login`, { username, password }),
 
-  // 💬 SESSIONS
+ 
   createSession: (customerId) =>
     api.post(`/sessions`, { customerId }),
 
   getSession: (id) =>
     api.get(`/sessions/${id}`),
 
-  // 📩 MESSAGES
+  getAllSessions: () =>
+    api.get(`/sessions`), 
+
+
   sendMessage: (sessionId, text) =>
     api.post(`/messages/${sessionId}`, { text }),
 
@@ -36,7 +39,7 @@ export default {
   getMessageDetails: (sessionId, messageId) =>
     api.get(`/messages/${sessionId}/${messageId}`),
 
-  // ❓ FAQ
+  
   addFAQ: (faq) =>
     api.post(`/faqs`, faq),
 
@@ -46,26 +49,16 @@ export default {
   deleteFAQ: (id) =>
     api.delete(`/faqs/${id}`),
 
-  // 🚨 ESCALATIONS
+  updateFAQ: (id, faq) =>
+    api.put(`/faqs/${id}`, faq), 
+
+ 
   getEscalations: () =>
     api.get(`/escalate`),
 
   escalate: (sessionId, reason) =>
     api.post(`/escalate/${sessionId}`, { reason }),
 
-  // 🧩 QUICK ACTIONS (if backend supports)
-  getQuickActions: () =>
-    api.get(`/quick-actions`),
-
-  addQuickAction: (text) =>
-    api.post(`/quick-actions`, { text }),
-
-  deleteQuickAction: (id) =>
-    api.delete(`/quick-actions/${id}`),
-
-  deleteAllQuickActions: () =>
-    api.delete(`/quick-actions`),
-
-  incrementQuickAction: (text) =>
-    api.post(`/quick-actions/increment`, { text }),
+  resolveEscalation: (id) =>
+    api.delete(`/escalate/${id}`), 
 };

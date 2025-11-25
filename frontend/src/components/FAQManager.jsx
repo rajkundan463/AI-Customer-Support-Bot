@@ -1,109 +1,184 @@
 import React, { useEffect, useState } from "react";
 import api from "../api/api";
 
-export default function FAQManager(){
-  const [list,setList]=useState([]);
-  const [q,setQ]=useState('');
-  const [a,setA]=useState('');
-  const [search,setSearch]=useState('');
-  const [editing,setEditing]=useState(null);
+export default function FAQManager() {
+  const [list, setList] = useState([]);
+  const [q, setQ] = useState("");
+  const [a, setA] = useState("");
+  const [search, setSearch] = useState("");
+  const [editing, setEditing] = useState(null);
 
-  // Load FAQ list (fixed useEffect)
+  // Load FAQs initially
   useEffect(() => {
-    async function loadFAQs() {
-      try {
-        const res = await api.searchFAQ("");
-        setList(res.data);
-      } catch (err) {
-        console.error("FAQ load failed", err);
-      }
-    }
     loadFAQs();
   }, []);
 
-  const add=async()=>{
-    if(!q.trim()||!a.trim())return;
-    const res=await api.addFAQ({question:q,answer:a});
-    setList(prev=>[res.data,...prev]);
-    setQ('');setA('');
+  const loadFAQs = async () => {
+    try {
+      const res = await api.searchFAQ("");
+      setList(res.data);
+    } catch (err) {
+      console.error("FAQ load failed", err);
+    }
   };
 
-  const startEdit=(f)=>{ setEditing(f); setQ(f.question); setA(f.answer); };
-  
-  const saveEdit=async()=>{
-    try{
-      await api.deleteFAQ(editing._id);
-      const res=await api.addFAQ({question:q,answer:a});
-      setList(prev=>[res.data,...prev.filter(i=>i._id!==editing._id)]);
-      setEditing(null); setQ(''); setA('');
-    }catch(e){ console.error(e); }
+  const add = async () => {
+    if (!q.trim() || !a.trim()) return;
+    const res = await api.addFAQ({ question: q, answer: a });
+    setList((prev) => [res.data, ...prev]);
+    setQ("");
+    setA("");
   };
 
-  const remove=async(id)=>{
-    if(!confirm('Delete?'))return;
+  const startEdit = (f) => {
+    setEditing(f);
+    setQ(f.question);
+    setA(f.answer);
+  };
+
+  const saveEdit = async () => {
+    try {
+      await api.updateFAQ(editing._id, { question: q, answer: a });
+      loadFAQs();
+      setEditing(null);
+      setQ("");
+      setA("");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const remove = async (id) => {
+    if (!window.confirm("Delete this FAQ?")) return;
     await api.deleteFAQ(id);
-    setList(prev=>prev.filter(x=>x._id!==id));
+    setList((prev) => prev.filter((x) => x._id !== id));
   };
 
-  const askBot=(q)=> window.dispatchEvent(new CustomEvent('askFAQ',{detail:q}));
+  const askBot = (q) =>
+    window.dispatchEvent(new CustomEvent("askFAQ", { detail: q }));
 
   return (
-    <div className="space-y-6">
-      <div>
+    <div className="space-y-8 p-4">
+
+      {/* Search Bar */}
+      <div className="flex gap-3 items-center">
         <input
           value={search}
-          onChange={e=>setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
           placeholder="Search FAQs"
-          className="w-full px-3 py-2 border rounded mb-2"
+          className="flex-1 px-4 py-2 rounded-lg bg-[var(--input-bg)] text-[var(--input-text)] placeholder-[var(--input-placeholder)] border border-[var(--input-border)] focus:border-indigo-500 outline-none"
         />
+
         <button
-          onClick={async()=>{ const r=await api.searchFAQ(search); setList(r.data); }}
-          className="px-3 py-2 bg-indigo-600 text-white rounded"
+          onClick={async () => {
+            const r = await api.searchFAQ(search);
+            setList(r.data);
+          }}
+          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition"
         >
           Search
         </button>
-        <button onClick={()=>{
-          setSearch("");
-          async function reload(){ 
-            const r=await api.searchFAQ(""); 
-            setList(r.data); 
-          }
-          reload();
-        }} className="ml-2 px-3 py-2 border rounded">Reset</button>
+
+        <button
+          onClick={() => {
+            setSearch("");
+            loadFAQs();
+          }}
+          className="px-4 py-2 border border-[var(--input-border)] hover:bg-white/10 text-white rounded-lg transition"
+        >
+          Reset
+        </button>
       </div>
 
-      <div className="p-3 border rounded" style={{background:"var(--panel)"}}>
-        <h4 className="font-semibold">{editing?'Edit FAQ':'Add FAQ'}</h4>
-        
-        <input className="w-full px-3 py-2 border rounded mb-2" value={q} onChange={e=>setQ(e.target.value)} placeholder="Question" />
+      {/* Add/Edit Section */}
+      <div className="p-6 rounded-xl border border-white/10 bg-[var(--panel)] shadow space-y-4">
+        <h3 className="text-lg font-semibold text-white">
+          {editing ? "Edit FAQ" : "Add FAQ"}
+        </h3>
 
-        <textarea className="w-full px-3 py-2 border rounded mb-2" value={a} onChange={e=>setA(e.target.value)} placeholder="Answer" />
+        <input
+          className="w-full px-4 py-2 rounded-lg bg-[var(--input-bg)] text-[var(--input-text)] placeholder-[var(--input-placeholder)] border border-[var(--input-border)] focus:border-indigo-500 outline-none"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Question"
+        />
+
+        <textarea
+          className="w-full px-4 py-2 rounded-lg min-h-[90px] bg-[var(--input-bg)] text-[var(--input-text)] placeholder-[var(--input-placeholder)] border border-[var(--input-border)] focus:border-indigo-500 outline-none"
+          value={a}
+          onChange={(e) => setA(e.target.value)}
+          placeholder="Answer"
+        />
 
         {editing ? (
-          <div>
-            <button onClick={saveEdit} className="px-3 py-2 bg-green-600 text-white rounded mr-2">Save</button>
-            <button onClick={()=>{setEditing(null);setQ('');setA('');}} className="px-3 py-2 border rounded">Cancel</button>
+          <div className="flex gap-3">
+            <button
+              onClick={saveEdit}
+              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => {
+                setEditing(null);
+                setQ("");
+                setA("");
+              }}
+              className="px-4 py-2 border border-[var(--input-border)] hover:bg-white/10 text-white rounded-lg transition"
+            >
+              Cancel
+            </button>
           </div>
         ) : (
-          <button onClick={add} className="px-3 py-2 bg-green-600 text-white rounded">Add FAQ</button>
+          <button
+            onClick={add}
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition"
+          >
+            Add FAQ
+          </button>
         )}
       </div>
 
-      <div className="space-y-3">
-        {list.map(f=>(
-          <div key={f._id} className="p-3 border rounded flex justify-between items-start">
-            <div>
-              <div className="font-medium">{f.question}</div>
-              <div className="text-sm text-[var(--muted)]">{f.answer}</div>
+      {/* FAQ List */}
+      <div className="space-y-4">
+        {list.map((f) => (
+          <div
+            key={f._id}
+            className="p-4 rounded-xl border border-white/10 bg-[var(--panel)] shadow flex justify-between items-start"
+          >
+            <div className="space-y-1">
+              <h4 className="font-medium text-white">{f.question}</h4>
+              <p className="text-gray-400 text-sm">{f.answer}</p>
             </div>
 
             <div className="flex flex-col gap-2">
-              <button onClick={()=>askBot(f.question)} className="px-3 py-1 bg-blue-600 text-white rounded text-sm">Ask Bot</button>
-              <button onClick={()=>startEdit(f)} className="px-3 py-1 border rounded text-sm">Edit</button>
-              <button onClick={()=>remove(f._id)} className="px-3 py-1 bg-red-600 text-white rounded text-sm">Delete</button>
+              <button
+                onClick={() => askBot(f.question)}
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs transition"
+              >
+                Ask Bot
+              </button>
+
+              <button
+                onClick={() => startEdit(f)}
+                className="px-3 py-1 border border-[var(--input-border)] hover:bg-white/10 text-white rounded-lg text-xs transition"
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={() => remove(f._id)}
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs transition"
+              >
+                Delete
+              </button>
             </div>
           </div>
         ))}
+
+        {list.length === 0 && (
+          <p className="text-gray-400 text-center text-sm">No FAQs found.</p>
+        )}
       </div>
     </div>
   );

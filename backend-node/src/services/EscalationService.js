@@ -2,24 +2,29 @@ const Escalation = require("../db/models/Escalation");
 const Session = require("../db/models/Session");
 
 module.exports = {
+  // Create a new escalation + update session status
   createEscalation: async (sessionId, reason) => {
     // Create escalation entry
-    const esc = await Escalation.create({
+    const escalation = await Escalation.create({
       session_id: sessionId,
-      reason
+      reason,
     });
 
-    // Update session status
-    await Session.findByIdAndUpdate(
-      sessionId,
-      { status: "escalated" }
+    // Update related session status (non-blocking)
+    Session.findByIdAndUpdate(sessionId, { status: "escalated" }).catch(
+      (err) => console.error("Failed to update session status:", err)
     );
 
-    return esc;
+    return escalation;
   },
 
-  getAll: async () => {
-    // Sort using MongoDB syntax
-    return await Escalation.find().sort({ createdAt: -1 });
-  }
+  // Get ALL escalations sorted newest first
+  getAll: () => {
+    return Escalation.find().sort({ createdAt: -1 });
+  },
+
+  // ✅ Permanently delete escalation
+  remove: (id) => {
+    return Escalation.findByIdAndDelete(id);
+  },
 };

@@ -3,14 +3,11 @@ const EscalationService = require("../services/EscalationService");
 module.exports = {
   escalateSession: async (req, res) => {
     try {
-      const sessionId = req.params.sessionId;
+      const { sessionId } = req.params;
       const reason = req.body.reason || "manual";
 
-      // Mongoose service call
-      const result = await EscalationService.createEscalation(sessionId, reason);
-
-      return res.json(result);
-
+      const escalation = await EscalationService.createEscalation(sessionId, reason);
+      res.json(escalation);
     } catch (err) {
       console.error("Escalate error:", err);
       res.status(500).json({ error: "Failed to escalate session" });
@@ -19,14 +16,26 @@ module.exports = {
 
   getAllEscalations: async (req, res) => {
     try {
-      // Get all escalations, sorted
       const escalations = await EscalationService.getAll();
-
-      return res.json(escalations);
-
+      res.json(escalations);
+      
     } catch (err) {
-      console.error("Fetch escalations error:", err);
+      console.error("Fetch error:", err);
       res.status(500).json({ error: "Failed to load escalations" });
     }
-  }
+  },
+
+  // ✅ delete escalation
+  resolveEscalation: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await EscalationService.remove(id);
+      console.log(id);
+
+      res.json({ success: true, message: "Escalation removed from database" });
+    } catch (err) {
+      console.error("Resolve error:", err);
+      res.status(500).json({ error: "Failed to resolve escalation" });
+    }
+  },
 };

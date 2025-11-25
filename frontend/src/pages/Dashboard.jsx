@@ -7,19 +7,16 @@ export default function Dashboard() {
   const [escalations, setEscalations] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Load both lists
   useEffect(() => {
     async function load() {
       try {
-        // Fetch sessions (all)
-        const s = await api.getAllSessions?.();
-        if (s?.data) setSessions(s.data);
+        const s = await api.getAllSessions();
+        setSessions(s.data || []);
 
-        // Fetch escalations
         const e = await api.getEscalations();
         setEscalations(e.data || []);
       } catch (err) {
-        console.error("Dashboard load failed", err);
+        console.error("Dashboard load failed:", err);
       }
       setLoading(false);
     }
@@ -27,96 +24,125 @@ export default function Dashboard() {
     load();
   }, []);
 
+  const resolve = async (id) => {
+    if (!window.confirm("Resolve this escalation?")) return;
+    try {
+      await api.resolveEscalation(id);
+      setEscalations((prev) => prev.filter((e) => e._id !== id));
+    } catch (err) {
+      alert("Unable to resolve. Try again.");
+    }
+  };
+
   if (loading) {
     return (
-      <div className="p-4 text-center">
-        <span className="text-sm text-gray-500">Loading dashboard...</span>
+      <div className="flex justify-center items-center h-[70vh] text-gray-500">
+        Loading dashboard...
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="p-6 space-y-6">
 
-      {/* Sessions */}
-      <div className="md:col-span-2 p-4 rounded border" style={{ background: "var(--panel)" }}>
-        <h3 className="font-semibold mb-4">Sessions</h3>
+      {/* Header */}
+      <h2 className="text-2xl font-semibold">Admin Dashboard</h2>
 
-        <div className="space-y-3">
-          {sessions.length === 0 && (
-            <div className="text-sm text-[var(--muted)]">No sessions available.</div>
-          )}
+      {/* Stats Summary */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="p-5 rounded-xl shadow bg-indigo-600 text-white">
+          <h3 className="text-sm opacity-80">Total Sessions</h3>
+          <p className="text-3xl font-bold mt-1">{sessions.length}</p>
+        </div>
 
-          {sessions.map((s) => (
-            <div
-              key={s._id}
-              className="p-3 border rounded flex justify-between items-center"
-            >
-              <div>
-                <div className="text-sm font-medium">Session: {s._id}</div>
-                <div className="text-xs text-[var(--muted)]">Customer: {s.customerId}</div>
-                <div className="text-xs text-[var(--muted)]">
-                  Created: {new Date(s.createdAt).toLocaleString()}
-                </div>
-              </div>
+        <div className="p-5 rounded-xl shadow bg-orange-500 text-white">
+          <h3 className="text-sm opacity-80">Active Escalations</h3>
+          <p className="text-3xl font-bold mt-1">{escalations.length}</p>
+        </div>
 
-              <Link
-                to={`/session/${s._id}`}
-                className="px-3 py-1 border rounded hover:bg-gray-100"
-              >
-                Open
-              </Link>
-            </div>
-          ))}
+        <div className="p-5 rounded-xl shadow bg-green-600 text-white">
+          <h3 className="text-sm opacity-80">Bot Confidence</h3>
+          <p className="text-3xl font-bold mt-1">92%</p>
         </div>
       </div>
 
-      {/* Escalations */}
-      <div className="p-4 rounded border" style={{ background: "var(--panel)" }}>
-        <h3 className="font-semibold mb-4">Escalations</h3>
+      {/* Main Panels */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        <div className="space-y-3">
-          {escalations.length === 0 && (
-            <div className="text-sm text-[var(--muted)]">No escalations recorded.</div>
-          )}
+        {/* Sessions List */}
+        <div className="rounded-xl border shadow bg-[var(--panel)] p-5 flex flex-col h-[75vh]">
+          <h3 className="text-lg font-semibold mb-4">Recent Sessions</h3>
 
-          {escalations.map((e) => (
-            <div
-              key={e._id}
-              className="p-3 border rounded flex justify-between items-center"
-            >
-              <div>
-                <div className="text-sm font-medium">Session: {e.session_id}</div>
-                <div className="text-xs text-[var(--muted)]">{e.reason}</div>
-                <div className="text-xs text-[var(--muted)]">
-                  Time: {new Date(e.createdAt).toLocaleString()}
+          <div className="overflow-y-auto space-y-4">
+            {sessions.length === 0 && (
+              <p className="text-sm text-gray-400">No sessions found.</p>
+            )}
+
+            {sessions.map((s) => (
+              <div
+                key={s._id}
+                className="border rounded-lg p-4 bg-white/5 backdrop-blur hover:bg-white/10 transition"
+              >
+                <div className="font-medium text-sm">Session: {s._id}</div>
+                <div className="text-xs text-gray-400">Customer: {s.customerId}</div>
+                <div className="text-xs text-gray-400 mb-3">
+                  {new Date(s.createdAt).toLocaleString()}
+                </div>
+
+                <Link
+                  to={`/session/${s._id}`}
+                  className="text-indigo-500 text-sm font-medium hover:underline"
+                >
+                  View Conversation →
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Escalations List */}
+        <div className="rounded-xl border shadow bg-[var(--panel)] p-5 flex flex-col h-[75vh]">
+          <h3 className="text-lg font-semibold mb-4">Escalations</h3>
+
+          <div className="overflow-y-auto space-y-4">
+            {escalations.length === 0 && (
+              <p className="text-sm text-gray-400">No escalations recorded.</p>
+            )}
+
+            {escalations.map((e) => (
+              <div
+                key={e._id}
+                className="border rounded-lg p-4 bg-white/5 backdrop-blur hover:bg-white/10 transition"
+              >
+                <div className="font-medium text-sm">
+                  Session: {e.session_id?._id || e.session_id}
+                </div>
+                <div className="text-xs text-gray-400">{e.reason}</div>
+                <div className="text-xs text-gray-400 mb-3">
+                  {new Date(e.createdAt).toLocaleString()}
+                </div>
+
+                <div className="flex gap-3">
+                  <Link
+                    to={`/session/${e.session_id}`}
+                    className="text-indigo-500 text-sm font-medium hover:underline"
+                  >
+                    Open
+                  </Link>
+
+                  <button
+                    onClick={() => resolve(e._id)}
+                    className="text-green-500 text-sm font-medium hover:underline"
+                  >
+                    Resolve
+                  </button>
                 </div>
               </div>
-
-              <Link
-                to={`/session/${e.session_id}`}
-                className="px-3 py-1 border rounded hover:bg-gray-100"
-              >
-                Open
-              </Link>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Small help box */}
-        <div className="mt-6 p-3 border rounded bg-gray-50 dark:bg-gray-900">
-          <h4 className="font-semibold">FAQ Manager</h4>
-          <p className="text-sm text-[var(--muted)]">
-            Use the FAQ Manager page to add, edit & delete FAQs.
-          </p>
-
-          <h4 className="font-semibold mt-4">Escalation Panel</h4>
-          <p className="text-sm text-[var(--muted)]">
-            View & manage escalations here.
-          </p>
-        </div>
       </div>
-
     </div>
   );
 }
