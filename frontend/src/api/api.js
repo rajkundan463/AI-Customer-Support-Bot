@@ -1,13 +1,11 @@
 import axios from "axios";
 
-const NODE_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000";
-
-// Create axios instance
+// API base URL
 const api = axios.create({
-  baseURL: NODE_BASE,
+  baseURL: "/", 
 });
 
-// Attach JWT token
+// Attach JWT token automatically
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -15,50 +13,50 @@ api.interceptors.request.use((config) => {
 });
 
 export default {
-
+  // Auth
   login: (username, password) =>
-    api.post(`/auth/login`, { username, password }),
+    api.post("auth/login", { username, password }),
 
- 
+  // Sessions
   createSession: (customerId) =>
-    api.post(`/sessions`, { customerId }),
+    api.post("sessions", { customerId }),
 
   getSession: (id) =>
-    api.get(`/sessions/${id}`),
+    api.get(`sessions/${id}`),
 
   getAllSessions: () =>
-    api.get(`/sessions`), 
+    api.get("sessions"),
 
-
+  // Messages
   sendMessage: (sessionId, text) =>
-    api.post(`/messages/${sessionId}`, { text }),
+    api.post(`messages/${sessionId}`, { text }),
 
   getMessages: (sessionId) =>
-    api.get(`/messages/${sessionId}`),
+    api.get(`messages/${sessionId}`),
 
   getMessageDetails: (sessionId, messageId) =>
-    api.get(`/messages/${sessionId}/${messageId}`),
+    api.get(`messages/${sessionId}/${messageId}`),
 
-  
+  // FAQ
   addFAQ: (faq) =>
-    api.post(`/faqs`, faq),
+    api.post("faqs", faq),
 
   searchFAQ: (q) =>
-    api.get(`/faqs?q=${encodeURIComponent(q)}`),
+    api.get(`faqs?q=${encodeURIComponent(q)}`),
 
   deleteFAQ: (id) =>
-    api.delete(`/faqs/${id}`),
+    api.delete(`faqs/${id}`),
 
   updateFAQ: (id, faq) =>
-    api.put(`/faqs/${id}`, faq), 
+    api.put(`faqs/${id}`, faq),
 
- 
+  // Escalations
   getEscalations: () =>
-    api.get(`/escalate`),
+    api.get("escalate"),
 
   escalate: (sessionId, reason) =>
-    api.post(`/escalate/${sessionId}`, { reason }),
+    api.post(`escalate/${sessionId}`, { reason }),
 
   resolveEscalation: (id) =>
-    api.delete(`/escalate/${id}`), 
+    api.delete(`escalate/${id}`),
 };
