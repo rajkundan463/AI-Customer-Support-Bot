@@ -25,7 +25,7 @@ module.exports = {
     }
   },
 
-  // ✅ delete escalation
+ 
   resolveEscalation: async (req, res) => {
     try {
       const { id } = req.params;

@@ -3,7 +3,7 @@ const FAQService = require("../services/FAQService");
 
 module.exports = {
 
-  // 🔍 Search FAQ
+ 
   searchFAQ: async (req, res) => {
     try {
       const q = req.query.q || "";
@@ -15,7 +15,7 @@ module.exports = {
     }
   },
 
-  // ➕ Add new FAQ
+ 
   addFAQ: async (req, res) => {
     try {
       const { question, answer } = req.body;
@@ -31,7 +31,7 @@ module.exports = {
     }
   },
 
-  // 📝 Update FAQ (OPTIONAL: frontend does delete + add, but good to have)
+  
   updateFAQ: async (req, res) => {
     try {
       const { id } = req.params;
@@ -50,7 +50,7 @@ module.exports = {
     }
   },
 
-  // ❌ Delete FAQ
+  
   deleteFAQ: async (req, res) => {
     try {
       const { id } = req.params;

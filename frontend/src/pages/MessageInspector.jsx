@@ -50,7 +50,7 @@ export default function MessageInspector() {
         </Link>
       </div>
 
-      {/* Basic Info */}
+      
       <div className="p-4 rounded border" style={{ background: "var(--panel)" }}>
         <h3 className="font-semibold mb-2">Message Info</h3>
 
@@ -75,7 +75,7 @@ export default function MessageInspector() {
         )}
       </div>
 
-      {/* Raw LLM Prompt */}
+      
       {msg.metadata?.prompt && (
         <div className="p-4 rounded border" style={{ background: "var(--panel)" }}>
           <h3 className="font-semibold mb-2">LLM Prompt</h3>
@@ -85,7 +85,7 @@ export default function MessageInspector() {
         </div>
       )}
 
-      {/* Raw LLM Response */}
+      
       {msg.metadata?.raw && (
         <div className="p-4 rounded border" style={{ background: "var(--panel)" }}>
           <h3 className="font-semibold mb-2">Raw LLM Response</h3>
@@ -95,7 +95,7 @@ export default function MessageInspector() {
         </div>
       )}
 
-      {/* Error */}
+      
       {msg.metadata?.error && (
         <div className="p-4 rounded border bg-red-50 border-red-300">
           <h3 className="font-semibold mb-2 text-red-600">Error</h3>

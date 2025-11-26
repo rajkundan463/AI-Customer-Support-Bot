@@ -4,17 +4,17 @@ import requests
 from dotenv import load_dotenv
 
 
-# Load Environment Variables
+
 
 load_dotenv()
 API_KEY = os.getenv("GEMINI_API_KEY")
 
 
-# Model & Endpoint Configuration
+
 
 MODEL = "models/gemini-2.5-flash"
 
-# Correct generateContent endpoint for your model
+
 GEMINI_URL = (
     f"https://generativelanguage.googleapis.com/v1/"
     f"{MODEL}:generateContent?key={API_KEY}"
@@ -22,7 +22,7 @@ GEMINI_URL = (
 
 
 
-# Universal Extractor for Gemini Responses
+
 
 def extract_any_text(data):
     """
@@ -52,7 +52,7 @@ def extract_any_text(data):
 
 
 
-# Main LLM Processing Function
+
 
 def generate_llm_response(user_message, session_summary, history, faq):
     """
@@ -65,11 +65,11 @@ def generate_llm_response(user_message, session_summary, history, faq):
     """
 
     try:
-        # Prepare content
+        
         faq_text = "\n".join([f"Q: {f['q']} | A: {f['a']}" for f in faq])
         history_text = "\n".join(history)
 
-        # Strict JSON instruction
+        
         system_prompt = """
         You are HelpBot, an AI customer support assistant.
         You MUST respond in valid JSON format ONLY:
@@ -80,7 +80,7 @@ def generate_llm_response(user_message, session_summary, history, faq):
         }
         """
 
-        # Combine final prompt
+        
         final_prompt = f"""
         {system_prompt}
 
@@ -97,7 +97,7 @@ def generate_llm_response(user_message, session_summary, history, faq):
         {user_message}
         """
 
-        # Gemini payload
+        
         payload = {
             "contents": [
                 {
@@ -108,17 +108,17 @@ def generate_llm_response(user_message, session_summary, history, faq):
             ]
         }
 
-        # Make API request
+        
         response = requests.post(GEMINI_URL, json=payload)
         data = response.json()
 
-        # Debug print (useful for development)
+        
         print("RAW GEMINI RESPONSE:", json.dumps(data, indent=2))
 
-        # Extract raw text
+        
         model_output = extract_any_text(data)
 
-        # If no output is found
+     
         if not model_output:
             return {
                 "answer": "Gemini did not return text.",
@@ -127,7 +127,6 @@ def generate_llm_response(user_message, session_summary, history, faq):
             }
 
        
-        # CLEAN JSON CODE BLOCKS (```json ... ```)
      
         cleaned = (
             model_output
@@ -138,12 +137,9 @@ def generate_llm_response(user_message, session_summary, history, faq):
         )
 
 
-        # Parse cleaned JSON output
-
         try:
             return json.loads(cleaned)
         except Exception:
-            # If model returned plain text instead of JSON
             return {
                 "answer": cleaned,
                 "confidence": 0.8,

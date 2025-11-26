@@ -52,7 +52,7 @@ export default function SessionViewer() {
   return (
     <div className="p-6 space-y-6">
 
-      {/* Header */}
+      
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold text-white">Session Viewer</h2>
         <Link
@@ -63,7 +63,7 @@ export default function SessionViewer() {
         </Link>
       </div>
 
-      {/* Session Details */}
+      
       <div className="p-6 rounded-xl border border-white/10 bg-[var(--panel)] shadow">
         <h3 className="text-lg font-semibold text-white mb-3">Session Info</h3>
 
@@ -92,7 +92,7 @@ export default function SessionViewer() {
         </p>
       </div>
 
-      {/* Messages */}
+      
       <div className="p-6 rounded-xl border border-white/10 bg-[var(--panel)] shadow h-[75vh] overflow-y-auto">
         <h3 className="text-lg font-semibold text-white mb-4">Message History</h3>
 
@@ -105,12 +105,12 @@ export default function SessionViewer() {
                   : "bg-[#0F172A] border-indigo-500/40 text-indigo-200"
                 }`}
             >
-              {/* Sender */}
+              
               <div className="font-semibold text-sm opacity-80 mb-1">
                 {m.sender.toUpperCase()}
               </div>
 
-              {/* Message Text */}
+              
               <div className="text-base leading-relaxed whitespace-pre-wrap">
                 {m.text}
               </div>
@@ -141,12 +141,12 @@ export default function SessionViewer() {
               )}
 
 
-              {/* Timestamp */}
+              
               <div className="text-[10px] text-gray-400 mt-3">
                 {new Date(m.createdAt).toLocaleString()}
               </div>
 
-              {/* Inspect Link */}
+              
               {m.sender === "bot" && (
                 <Link
                   to={`/inspect/${sessionId}/${m._id}`}

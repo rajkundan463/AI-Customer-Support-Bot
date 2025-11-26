@@ -8,7 +8,7 @@ export default function FAQManager() {
   const [search, setSearch] = useState("");
   const [editing, setEditing] = useState(null);
 
-  // Load FAQs initially
+  
   useEffect(() => {
     loadFAQs();
   }, []);
@@ -60,7 +60,7 @@ export default function FAQManager() {
   return (
     <div className="space-y-8 p-4">
 
-      {/* Search Bar */}
+      
       <div className="flex gap-3 items-center">
         <input
           value={search}
@@ -90,7 +90,7 @@ export default function FAQManager() {
         </button>
       </div>
 
-      {/* Add/Edit Section */}
+      
       <div className="p-6 rounded-xl border border-white/10 bg-[var(--panel)] shadow space-y-4">
         <h3 className="text-lg font-semibold text-white">
           {editing ? "Edit FAQ" : "Add FAQ"}
@@ -139,7 +139,7 @@ export default function FAQManager() {
         )}
       </div>
 
-      {/* FAQ List */}
+     
       <div className="space-y-4">
         {list.map((f) => (
           <div

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const SessionSchema = new mongoose.Schema({
   customerId: { type: String, required: true },
-  status: { type: String, default: "active" }, // active | escalated | closed
+  status: { type: String, default: "active" }, 
 }, { timestamps: true });
 
 module.exports = mongoose.model("Session", SessionSchema);

@@ -10,13 +10,13 @@ const sequelize = new Sequelize(
   }
 );
 
-// Import models
+
 const Session = require("./models/Session")(sequelize, DataTypes);
 const Message = require("./models/Message")(sequelize, DataTypes);
 const FAQ = require("./models/FAQ")(sequelize, DataTypes);
 const Escalation = require("./models/Escalation")(sequelize, DataTypes);
 
-// Setup associations
+
 Session.associate({ Message, Escalation });
 Message.associate = () => {};
 FAQ.associate = () => {};

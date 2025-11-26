@@ -17,7 +17,6 @@ const FAQSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// 🔍 Text index for fast search
 FAQSchema.index({ question: "text", answer: "text" });
 
 module.exports = mongoose.model("FAQ", FAQSchema);

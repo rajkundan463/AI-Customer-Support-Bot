@@ -13,7 +13,7 @@ import Protected from "./components/Protected";
 export default function App() {
   const location = useLocation();
 
-  // Theme mode state
+  
   const [dark, setDark] = useState(() => localStorage.getItem("dark") === "1");
 
   React.useEffect(() => {
@@ -21,7 +21,7 @@ export default function App() {
     localStorage.setItem("dark", dark ? "1" : "0");
   }, [dark]);
 
-  // Hide sidebar on login page
+  
   const hideSidebar = location.pathname === "/login";
 
   return (
@@ -34,13 +34,13 @@ export default function App() {
 
           <Routes>
 
-            {/* Public route */}
+            
             <Route path="/login" element={<Login />} />
 
-            {/* Customer Chat (no admin required) */}
+            
             <Route path="/" element={<Chat />} />
 
-            {/* Protected Admin Routes */}
+            
             <Route
               path="/dashboard"
               element={
@@ -77,7 +77,7 @@ export default function App() {
               }
             />
 
-            {/* Fallback */}
+            
             <Route path="*" element={<Navigate to="/" replace />} />
 
           </Routes>

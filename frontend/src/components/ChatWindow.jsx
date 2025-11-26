@@ -5,7 +5,7 @@ export default function ChatWindow({ messages, loading, onSend }) {
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
 
-  // Auto-scroll to bottom
+  
   useEffect(() => {
     if (scrollRef.current)
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -14,7 +14,7 @@ export default function ChatWindow({ messages, loading, onSend }) {
   return (
     <div className="flex flex-col h-[90vh] bg-[#0E1A2B] rounded-lg overflow-hidden">
 
-      {/* Messages */}
+      
       <div
         ref={scrollRef}
         className="flex-1 overflow-y-auto p-4"
@@ -31,7 +31,7 @@ export default function ChatWindow({ messages, loading, onSend }) {
         )}
       </div>
 
-      {/* Input Bar */}
+      
       <div className="bg-[#0E1A2B] border-t border-slate-700 p-3">
         <div className="flex gap-2">
 

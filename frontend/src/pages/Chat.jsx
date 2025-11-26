@@ -16,19 +16,19 @@ export default function Chat() {
   const [statusBadge, setStatusBadge] = useState(null);
   const [faqList, setFaqList] = useState([]);
 
-  // Fetch FAQs once
+  
   useEffect(() => {
     api.searchFAQ("")
       .then((r) => setFaqList(r.data || []))
       .catch(() => {});
   }, []);
 
-  // Store messages locally
+  
   useEffect(() => {
     localStorage.setItem(MEM_KEY, JSON.stringify(messages));
   }, [messages]);
 
-  // Create session or load messages
+  
   useEffect(() => {
     if (!sessionId) {
       api
@@ -46,7 +46,7 @@ export default function Chat() {
     }
   }, [sessionId]);
 
-  // Allow FAQ button to trigger send()
+  
   useEffect(() => {
     const handler = (e) => {
       send(e.detail);
@@ -100,12 +100,12 @@ export default function Chat() {
     setLoading(false);
   };
 
-  // ✅ Clear chat + reset session + wipe local memory
+  
   const clearChat = () => {
     localStorage.removeItem(MEM_KEY);
     localStorage.removeItem(SESSION_KEY);
     setMessages([]);
-    setSessionId(null); // triggers new session creation
+    setSessionId(null); 
     setStatusBadge(null);
   };
 
@@ -126,7 +126,7 @@ export default function Chat() {
       </div>
 
       <div className="space-y-6">
-        {/* FAQ Panel */}
+        
         <div className="p-4 rounded" style={{ background: "var(--panel)" }}>
           <h4 className="font-semibold mb-3">FAQs</h4>
           <div className="space-y-2">
@@ -142,7 +142,7 @@ export default function Chat() {
           </div>
         </div>
 
-        {/* Session History */}
+        
         <div className="p-4 rounded" style={{ background: "var(--panel)" }}>
           <h4 className="font-semibold">Session History</h4>
           <p className="text-sm text-[var(--muted)]">

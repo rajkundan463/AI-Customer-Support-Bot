@@ -21,11 +21,11 @@ export default function Sidebar({ onToggleTheme }) {
   return (
     <aside className="w-72 p-6 border-r flex flex-col" style={{ background: "var(--panel)" }}>
       
-      {/* Header */}
+      
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold">AI Support</h2>
 
-        {/* Theme Toggle */}
+        
         <button
           onClick={onToggleTheme}
           title="Toggle theme"
@@ -35,9 +35,9 @@ export default function Sidebar({ onToggleTheme }) {
         </button>
       </div>
 
-      {/* Navigation */}
+      
       <nav className="space-y-3 text-[var(--muted)]">
-        {/* Chat – always visible */}
+        
         <NavLink
           to="/"
           end
@@ -50,7 +50,7 @@ export default function Sidebar({ onToggleTheme }) {
           <FiHome /> Chat
         </NavLink>
 
-        {/* Admin-only links */}
+        
         {token && (
           <>
             <NavLink

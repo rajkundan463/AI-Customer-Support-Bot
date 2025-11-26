@@ -45,10 +45,10 @@ export default function Dashboard() {
   return (
     <div className="p-6 space-y-6">
 
-      {/* Header */}
+      
       <h2 className="text-2xl font-semibold">Admin Dashboard</h2>
 
-      {/* Stats Summary */}
+      
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div className="p-5 rounded-xl shadow bg-indigo-600 text-white">
           <h3 className="text-sm opacity-80">Total Sessions</h3>
@@ -66,10 +66,10 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Main Panels */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        {/* Sessions List */}
+        
         <div className="rounded-xl border shadow bg-[var(--panel)] p-5 flex flex-col h-[75vh]">
           <h3 className="text-lg font-semibold mb-4">Recent Sessions</h3>
 
@@ -100,7 +100,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Escalations List */}
+        
         <div className="rounded-xl border shadow bg-[var(--panel)] p-5 flex flex-col h-[75vh]">
           <h3 className="text-lg font-semibold mb-4">Escalations</h3>
 

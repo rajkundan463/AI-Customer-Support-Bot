@@ -6,7 +6,7 @@ const EscalationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Session",
       required: true,
-      index: true, // ✅ faster lookup in dashboard
+      index: true, 
     },
     reason: {
       type: String,
@@ -21,7 +21,7 @@ const EscalationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "resolved"], // ✅ avoid invalid values
+      enum: ["pending", "resolved"], 
       default: "pending",
       index: true,
     },
@@ -29,7 +29,6 @@ const EscalationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// ✅ Sort newest first automatically
 EscalationSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model("Escalation", EscalationSchema);

@@ -8,7 +8,7 @@ module.exports = {
       const { sessionId } = req.params;
       const { text } = req.body;
 
-      // Save user message
+     
       await Message.create({
         session_id: sessionId,
         sender: "customer",

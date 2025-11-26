@@ -1,11 +1,11 @@
 import axios from "axios";
 
-// API base URL
+
 const api = axios.create({
   baseURL: "/", 
 });
 
-// Attach JWT token automatically
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
@@ -13,11 +13,11 @@ api.interceptors.request.use((config) => {
 });
 
 export default {
-  // Auth
+  
   login: (username, password) =>
     api.post("auth/login", { username, password }),
 
-  // Sessions
+  
   createSession: (customerId) =>
     api.post("sessions", { customerId }),
 
@@ -27,7 +27,7 @@ export default {
   getAllSessions: () =>
     api.get("sessions"),
 
-  // Messages
+  
   sendMessage: (sessionId, text) =>
     api.post(`messages/${sessionId}`, { text }),
 
@@ -37,7 +37,7 @@ export default {
   getMessageDetails: (sessionId, messageId) =>
     api.get(`messages/${sessionId}/${messageId}`),
 
-  // FAQ
+  
   addFAQ: (faq) =>
     api.post("faqs", faq),
 
@@ -50,7 +50,7 @@ export default {
   updateFAQ: (id, faq) =>
     api.put(`faqs/${id}`, faq),
 
-  // Escalations
+  
   getEscalations: () =>
     api.get("escalate"),
 

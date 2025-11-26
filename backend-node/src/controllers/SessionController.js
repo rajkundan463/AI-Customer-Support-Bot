@@ -1,7 +1,7 @@
 const Session = require("../db/models/Session");
 
 module.exports = {
-  // ✅ Create a new session
+  
   createSession: async (req, res) => {
     try {
       const { customerId } = req.body;
@@ -15,7 +15,7 @@ module.exports = {
     }
   },
 
-  // ✅ Get a single session
+  
   getSession: async (req, res) => {
     try {
       const session = await Session.findById(req.params.sessionId);
@@ -31,7 +31,7 @@ module.exports = {
     }
   },
 
-  // ✅ Get ALL sessions — REQUIRED for Dashboard
+  
   getAllSessions: async (req, res) => {
     try {
       const sessions = await Session.find().sort({ createdAt: -1 });
